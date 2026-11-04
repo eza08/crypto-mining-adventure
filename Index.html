@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#101927"><title>Crypto Mining Adventure 0.2</title>
+<style>
+:root{--bg:#101927;--panel:#1c2b3d;--line:#3b536b;--gold:#ffd166;--cyan:#63d9ec;--green:#8be0b2;--muted:#a9bacb}
+*{box-sizing:border-box}body{margin:0;color:#f4f7fb;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(ellipse at 50% -10%,#35536d,#101927 62%);min-height:100vh}
+.wrap{max-width:780px;margin:auto;padding:14px 13px 30px}.head{display:flex;align-items:center;justify-content:space-between;gap:8px}.logo{font-weight:950;letter-spacing:.5px;font-size:clamp(17px,4vw,24px)}.ver{font-size:10px;border:1px solid #45836d;color:#a9f0cb;border-radius:30px;padding:5px 8px;white-space:nowrap}.sub{font-size:12px;color:var(--muted);margin:4px 0 13px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.stat,.panel{border:1px solid var(--line);background:linear-gradient(145deg,#263c51,#19283a);border-radius:14px;padding:10px 12px}.stat small{display:block;color:var(--muted);font-size:10px}.stat strong{font-size:21px}.gold{color:var(--gold)}.cyan{color:var(--cyan)}.green{color:var(--green)}
+.progress{height:7px;background:#0d1723;border-radius:9px;overflow:hidden;margin-top:7px}.bar{height:100%;width:0;background:linear-gradient(90deg,#55c9e5,#8be0b2);transition:width .25s}
+.mine{margin-top:10px;position:relative;overflow:hidden;border-radius:18px;border:1px solid #526b81;background:linear-gradient(#263f54,#172638 70%);padding:13px;text-align:center}
+.mine:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 90%,#e4a43c30,transparent 52%);pointer-events:none}
+.mine h2{position:relative;font-size:15px;margin:2px 0}.mine .desc{position:relative;color:#b6c8d8;font-size:11px;margin:3px 0 0}
+.cave{position:relative;margin:12px auto 9px;width:min(100%,420px);height:165px;border-radius:48% 48% 12px 12px/35% 35% 12px 12px;background:linear-gradient(180deg,#172332,#0c1722);border:5px solid #526477;box-shadow:inset 0 0 35px #000b,0 7px 14px #0005;display:flex;align-items:center;justify-content:center;gap:12px}
+.ore{font-size:clamp(35px,10vw,57px);filter:drop-shadow(0 5px 5px #0009);animation:float 2.4s ease-in-out infinite}.ore:nth-child(2){animation-delay:.3s}.ore:nth-child(3){animation-delay:.6s}
+@keyframes float{0%,100%{transform:translateY(2px)}50%{transform:translateY(-5px)}}
+#mineBtn{border:0;border-radius:13px;background:linear-gradient(#ffe08a,#f2ad38);color:#3a260b;font-weight:1000;font-size:18px;padding:13px 26px;min-width:190px;box-shadow:0 5px 0 #a66b1e;touch-action:manipulation;position:relative}
+#mineBtn:active{transform:translateY(4px);box-shadow:0 1px 0 #a66b1e}.mine .tip{position:relative;color:#bdcbd8;font-size:10px;margin:10px 0 1px}
+.tabs{display:flex;gap:7px;overflow:auto;margin:11px 0 8px}.tab{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:#1b2c3e;color:#c9d8e6;font-weight:750;white-space:nowrap}.tab.active{background:#35536d;color:#fff;border-color:#6d94b4}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.panel h3{font-size:13px;margin:0 0 5px}.panel p{font-size:11px;color:var(--muted);margin:0 0 9px;min-height:29px}.action{width:100%;padding:9px 7px;border-radius:9px;border:1px solid #58758f;background:#2d4962;color:white;font-weight:800}.action:disabled{opacity:.38}
+.mission{margin-top:10px}.missionline{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#cbd8e4}.toast{min-height:20px;text-align:center;color:#a9f0cb;font-size:11px;margin:8px 0 2px}.foot{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#8fa4b7;font-size:10px;margin-top:8px}.reset{border:1px solid #52677c;border-radius:8px;padding:6px 9px;background:transparent;color:#c4d0dc}
+@media(min-width:560px){.stats{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.cave{height:190px}}
+</style></head>
+<body><main class="wrap">
+<div class="head"><div class="logo">⛏️ CRYPTO MINING ADVENTURE</div><div class="ver">VERSION 0.2</div></div>
+<div class="sub">Jelajahi gua, kumpulkan mineral, dan bangun kerajaan tambangmu.</div>
+<section class="stats">
+ <div class="stat"><small>🪙 GOLD</small><strong class="gold" id="gold">0</strong></div>
+ <div class="stat"><small>💎 CRYSTAL</small><strong class="cyan" id="crystal">0</strong></div>
+ <div class="stat"><small>⭐ LEVEL PENAMBANG</small><strong id="level">1</strong><div class="progress"><div class="bar" id="xpbar"></div></div></div>
+ <div class="stat"><small>⚡ POWER / KETUKAN</small><strong class="green" id="power">1</strong></div>
+</section>
+<section class="mine">
+ <h2 id="areaTitle">AREA 01 — GUA BATU TUA</h2><p class="desc" id="areaDesc">Tempat terbaik untuk memulai petualangan.</p>
+ <div class="cave"><span class="ore">🪨</span><span class="ore" id="mainOre">🪙</span><span class="ore">💎</span></div>
+ <button id="mineBtn">⛏️ MULAI MENAMBANG</button>
+ <p class="tip">Setiap ketukan menghasilkan GOLD dan XP. Ada peluang menemukan CRYSTAL!</p>
+</section>
+<div class="tabs"><button class="tab active" data-area="0">🪨 Gua Batu</button><button class="tab" data-area="1">🟡 Lorong Emas</button><button class="tab" data-area="2">💠 Gua Kristal</button></div>
+<section class="grid">
+ <div class="panel"><h3>🔨 Pickaxe</h3><p id="pickInfo">Kekuatan alat meningkat +1 setiap upgrade.</p><button class="action" id="pickBtn">Upgrade · 25 GOLD</button></div>
+ <div class="panel"><h3>⚙️ Mesin Otomatis</h3><p id="machineInfo">Mesin menambang GOLD setiap 3 detik.</p><button class="action" id="machineBtn">Beli · 100 GOLD</button></div>
+ <div class="panel"><h3>🧪 Tas Mineral</h3><p id="bagInfo">Simpan hasil temuan kristal dan mineral langka.</p><button class="action" id="bonusBtn">Tukar 5 CRYSTAL</button></div>
+</section>
+<section class="panel mission">
+ <h3>📜 Misi Penambang</h3><div class="missionline"><span id="missionText">Tambang 10 kali</span><strong id="missionCount">0/10</strong></div><div class="progress"><div class="bar" id="missionBar"></div></div><button class="action" id="claimBtn" disabled style="margin-top:9px">Klaim hadiah · 20 GOLD</button>
+</section>
+<div class="toast" id="toast">Progres tersimpan otomatis di perangkat ini.</div>
+<div class="foot"><span>Demo game · GOLD/CRYSTAL belum berupa token</span><button class="reset" id="resetBtn">Reset progres</button></div>
+</main>
+<script>
+const KEY="cma_proto_02";
+const fresh=()=>({gold:0,crystal:0,power:1,level:1,xp:0,taps:0,machines:0,pickLevel:1,claimed:false,area:0});
+let s=fresh();try{const v=JSON.parse(localStorage.getItem(KEY)||"null");if(v)s={...s,...v}}catch(e){}
+const $=id=>document.getElementById(id);
+const areas=[
+ {title:"AREA 01 — GUA BATU TUA",desc:"Tempat terbaik untuk memulai petualangan.",ore:"🪙",unlock:0,mult:1},
+ {title:"AREA 02 — LORONG EMAS",desc:"Urat emas lebih banyak. Hasil tambang meningkat.",ore:"🟡",unlock:150,mult:2},
+ {title:"AREA 03 — GUA KRISTAL",desc:"Kristal berkilau menunggu penambang berani.",ore:"💠",unlock:500,mult:4}
+];
+function save(){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}render()}
+function msg(t){$("toast").textContent=t}
+function render(){
+ const a=areas[s.area];$("gold").textContent=Math.floor(s.gold);$("crystal").textContent=s.crystal;
+ $("level").textContent=s.level;$("power").textContent=s.power;$("areaTitle").textContent=a.title;$("areaDesc").textContent=a.desc;$("mainOre").textContent=a.ore;
+ $("xpbar").style.width=Math.min(100,s.xp/((s.level)*20)*100)+"%";
+ $("pickInfo").textContent=`Level ${s.pickLevel}. Tambah +1 power per ketukan.`;
+ const pc=25*s.pickLevel;$("pickBtn").textContent=`Upgrade · ${pc} GOLD`;$("pickBtn").disabled=s.gold<pc;
+ const mc=100*(s.machines+1);$("machineInfo").textContent=`${s.machines} mesin aktif · menghasilkan ${s.machines} GOLD / 3 detik.`;
+ $("machineBtn").textContent=`Beli · ${mc} GOLD`;$("machineBtn").disabled=s.gold<mc;
+ $("bonusBtn").disabled=s.crystal<5;$("bagInfo").textContent=`Kamu memiliki ${s.crystal} CRYSTAL. Tukar 5 menjadi 100 GOLD.`;
+ $("missionCount").textContent=Math.min(10,s.taps)+"/10";$("missionBar").style.width=Math.min(100,s.taps*10)+"%";
+ $("missionText").textContent=s.claimed?"Misi pertama selesai!":"Tambang 10 kali untuk bonus 20 GOLD.";
+ $("claimBtn").disabled=s.taps<10||s.claimed;$("claimBtn").textContent=s.claimed?"Hadiah sudah diklaim":"Klaim hadiah · 20 GOLD";
+ document.querySelectorAll(".tab").forEach((b,i)=>{b.classList.toggle("active",i===s.area);b.disabled=i>0&&s.gold<areas[i].unlock});
+}
+$("mineBtn").onclick=()=>{
+ const a=areas[s.area];let earned=s.power*a.mult;s.gold+=earned;s.xp+=5;s.taps++;
+ let note=`+${earned} GOLD · +5 XP`;
+ if(Math.random()<(.09+s.area*.04)){s.crystal++;note+=" · 💎 CRYSTAL ditemukan!"}
+ while(s.xp>=s.level*20){s.xp-=s.level*20;s.level++;note+=" · LEVEL NAIK!"}
+ msg(note);save();
+};
+$("pickBtn").onclick=()=>{let c=25*s.pickLevel;if(s.gold>=c){s.gold-=c;s.pickLevel++;s.power++;msg("Pickaxe semakin kuat!");save()}};
+$("machineBtn").onclick=()=>{let c=100*(s.machines+1);if(s.gold>=c){s.gold-=c;s.machines++;msg("Mesin otomatis berhasil dibeli!");save()}};
+$("bonusBtn").onclick=()=>{if(s.crystal>=5){s.crystal-=5;s.gold+=100;msg("5 CRYSTAL ditukar menjadi 100 GOLD!");save()}};
+$("claimBtn").onclick=()=>{if(s.taps>=10&&!s.claimed){s.gold+=20;s.claimed=true;msg("Misi selesai! Bonus 20 GOLD diterima.");save()}};
+document.querySelectorAll(".tab").forEach((b,i)=>b.onclick=()=>{
+ if(i===0||s.gold>=areas[i].unlock){s.area=i;msg(i===0?"Kembali ke Gua Batu.":`Area ${i+1} dibuka!`);save()}
+ else msg(`Butuh ${areas[i].unlock} GOLD untuk membuka area ini.`);
+});
+$("resetBtn").onclick=()=>{if(confirm("Hapus semua progres versi 0.2 di perangkat ini?")){s=fresh();save();msg("Progres direset.")}};
+setInterval(()=>{if(s.machines>0){s.gold+=s.machines;save()}},3000);render();
+</script></body></html>
